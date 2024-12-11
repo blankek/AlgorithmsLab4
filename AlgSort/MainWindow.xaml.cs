@@ -1,11 +1,12 @@
-﻿using System.IO;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using SortLibrary;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Media;
+using SortLibrary;
 
 namespace AlgSort
 {
@@ -25,7 +26,7 @@ namespace AlgSort
 
             string filePath = "C:\\Users\\komba\\source\\repos\\AlgSort\\AlgSort\\bin\\Debug\\net8.0-windows\\lab.txt";
             string text = ReadFromFile(filePath);
-            string[] words = text.Split(new[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> words = text.Split(new[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
             Stopwatch stopwatch = new Stopwatch(); // Создаем экземпляр Stopwatch
 
@@ -43,7 +44,7 @@ namespace AlgSort
                 // Radix sort
                 RadixSort radixSorter = new RadixSort();
                 stopwatch.Start(); // Начинаем отсчет времени
-                radixSorter.Sort(words);
+                words = radixSorter.RadixSorted(words); // Обновляем список после сортировки
                 stopwatch.Stop(); // Останавливаем отсчет времени
                 ResultTextBox.Text = $"Radix sort: {string.Join(", ", words).Replace(".", "").Replace(",,", ",")}\n";
             }
@@ -79,7 +80,7 @@ namespace AlgSort
             return text;
         }
 
-        private Dictionary<string, int> CountWordFrequencies(string[] words)
+        private Dictionary<string, int> CountWordFrequencies(List<string> words)
         {
             var wordCount = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
             foreach (var word in words)
